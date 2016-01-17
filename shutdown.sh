@@ -2,7 +2,7 @@
 ### BEGIN INIT INFO
 # Provides:          rpi-shutdown
 # Required-Start:    $syslog
-# Required-Stop:     
+# Required-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Shutdown RPi gracefully when wall wart is yanked.

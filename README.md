@@ -12,18 +12,29 @@ How then to initiate a shutdown, and how to know when it's finished? It was
 while contemplating the creation of just such an embedded widget that I hit
 upon this piece of brilliance. First, build this circuit.
 
+![Circuit diagram](https://raw.githubusercontent.com/wware/rpi-shutdown/master/RPiShutdown.png)
+
 How does this work? When you plug in the wall wart, we don't want to draw power
 from the 9 volt battery yet, so we want Q1 to be off. This is accomplished by
 using Q4 to keep the Q2/Q3 Darlington turned off. The wall wart power flows
 thru the three diodes in parallel and operates the switching voltage regulator
-(I picked up a bunch of these from some Chinese outfit on eBay). Meanwhile C1
-charges to around 9 volts.
+(I picked up a bunch of these from some Chinese outfit on eBay -- NOTE -- you
+may need to manually adjust the pot for the right voltage, as I did). Meanwhile
+C1 charges to around 9 volts.
+
+![Switching supply](https://raw.githubusercontent.com/wware/rpi-shutdown/master/switching_supply.gif)
 
 What happens when you yank the wall wart? First Q4 turns off, and C1 begins to
 discharge thru R1 and R6, turning on the Darlington pair, which turns on Q1 so
 that now the switching regulator is running on battery power. The battery power
 remains on for some multiple of the RC time constant (100 uF * 500K = 50 secs),
 and you end up with about two minutes to get the Raspberry Pi to shutdown.
+
+*I discovered a failure mode of this circuit, which is that if you slowly lower
+the wall wart voltage, for instance by unplugging the wall wart from the wall
+so that its output voltage descends slowly, you get a loss of power to the RPi
+because the battery power does not turn on soon enough. So you want to make sure
+that you are ending the wall wart power abruptly.*
 
 The active-low shutdown signal should be wired to a GPIO, which should poll it
 about once per second. You'll need a script on the RPi that watches this GPIO
@@ -42,4 +53,5 @@ You'll need two scripts to make this thing work, which you'll find in this
 repository. Copy `shutdown.py` to the `/root` directory. Copy `shutdown.sh`
 to the `/etc/init.d` directory. While still in the `/etc/init.d` directory,
 type `update-rc.d shutdown.sh defaults`, which will turn this into a service
-that becomes part of your RPi's boot process.
+that becomes part of your RPi's boot process. Reboot the Pi and the new service
+will take effect.
