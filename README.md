@@ -55,3 +55,9 @@ to the `/etc/init.d` directory. While still in the `/etc/init.d` directory,
 type `update-rc.d shutdown.sh defaults`, which will turn this into a service
 that becomes part of your RPi's boot process. Reboot the Pi and the new service
 will take effect.
+
+One thing I had to do with the Python script was this:
+```bash
+apt-get install python-pip
+pip install pytz
+```
