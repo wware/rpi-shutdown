@@ -67,7 +67,7 @@ that you are ending the wall wart power abruptly.
 The fix for that is to use Schmitt triggers. It will be a while before I get a
 chance to prototype this circuit but here is the general idea:
 
-![Circuit diagram](https://raw.githubusercontent.com/wware/rpi-shutdown/master/RPiShutdown.png)
+![Circuit diagram](https://raw.githubusercontent.com/wware/rpi-shutdown/master/rpi-shutdown-4093.png)
 
 The CD4093 is a CMOS Schmitt trigger quad NAND gate, powered directly by the 9v
 battery. All unused inputs should be tied to +9v to minimize current consumption.
