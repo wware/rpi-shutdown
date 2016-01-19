@@ -30,12 +30,6 @@ that now the switching regulator is running on battery power. The battery power
 remains on for some multiple of the RC time constant (100 uF * 500K = 50 secs),
 and you end up with about two minutes to get the Raspberry Pi to shutdown.
 
-*I discovered a failure mode of this circuit, which is that if you slowly lower
-the wall wart voltage, for instance by unplugging the wall wart from the wall
-so that its output voltage descends slowly, you get a loss of power to the RPi
-because the battery power does not turn on soon enough. So you want to make sure
-that you are ending the wall wart power abruptly.*
-
 The active-low shutdown signal should be wired to a GPIO, which should poll it
 about once per second. You'll need a script on the RPi that watches this GPIO
 and forces a shutdown when it goes low. I've connected the shutdown warning to
@@ -61,3 +55,19 @@ One thing I had to do with the Python script was this:
 apt-get install python-pip
 pip install pytz
 ```
+BUG FIX
+====
+
+I discovered a failure mode of this circuit, which is that if you slowly lower
+the wall wart voltage, for instance by unplugging the wall wart from the wall
+so that its output voltage descends slowly, you get a loss of power to the RPi
+because the battery power does not turn on soon enough. So you want to make sure
+that you are ending the wall wart power abruptly.
+
+The fix for that is to use Schmitt triggers. It will be a while before I get a
+chance to prototype this circuit but here is the general idea:
+
+![Circuit diagram](https://raw.githubusercontent.com/wware/rpi-shutdown/master/RPiShutdown.png)
+
+The CD4093 is a CMOS Schmitt trigger quad NAND gate, powered directly by the 9v
+battery. All unused inputs should be tied to +9v to minimize current consumption.
